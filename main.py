@@ -42,8 +42,9 @@ def open_market():
 
 
 if __name__ == "__main__":
-    login(days=1)
-
+    
+    login()
+    
     stocks = get_stocks
     print('Stocks: ', stocks)
 
