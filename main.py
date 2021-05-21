@@ -1,4 +1,6 @@
 import config
+import trade_strat
+
 import robin_stocks as rh
 import datetime as dt
 import time
@@ -52,6 +54,8 @@ if __name__ == "__main__":
 
     stocks = get_stocks()
     print('Stocks: ', stocks)
+    
+    ts = trade_strat.Trader(stocks)
 
     while open_market():
         prices = rh.robinhood.stocks.get_latest_price(stocks)
@@ -60,6 +64,7 @@ if __name__ == "__main__":
         for i, stock in enumerate(stocks):
             price = float(prices[i])
             print('{} = ${}'.format(stock, price))
+            data = ts.get_historical_prices(stock, span='day')
 
         time.sleep(10)
 
