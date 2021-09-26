@@ -1,20 +1,23 @@
 import config
 import trade_strat
-
+import os
 import robin_stocks as rh
 import datetime as dt
 import time
 import pyotp
+# This will login as of 09-25-2021
+# Video modifying https://www.youtube.com/watch?v=-JTkNoIayR0
 
-
-totp = pyotp.TOTP("My2factorAppHere").now()
+totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
 print('Current OTP: ', totp)
 
 # Login function
+
+
 def login(days):
     time_logged_in = 60*60*24*days
-    rh.robinhood.authentication.login(username=config.USERNAME,
-                            password=config.PASSWORD,
+    rh.robinhood.authentication.login(os.environ['USERNAME'],
+                            password=os.environ['PASSWORD'],
                             expiresIn = time_logged_in,
                             scope='internal',
                             by_sms=True,
@@ -29,15 +32,16 @@ def get_stocks():
     stocks = list()
     stocks.append('NOK')
     stocks.append('PLTR')
-    stocks.append('VIAC')
+    stocks.append('SOFI')
+    stocks.append('F')
     return(stocks)
 
 
 def open_market():
-    market = True
+    market = False
     time_now = dt.datetime.now().time()
 
-    market_open = dt.time(7,00,0) # 7:00 am
+    market_open = dt.time(7,30,0) # 7:30 am
     market_close = dt.time(13,59,0) # 1:59 pm
 
     if time_now > market_open and time_now < market_close:
