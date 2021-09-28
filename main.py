@@ -40,14 +40,17 @@ def get_stocks():
 def open_market():
     market = False
     time_now = dt.datetime.now().time()
+    
 
-    market_open = dt.time(7,30,0) # 7:30 am
-    market_close = dt.time(13,59,0) # 1:59 pm
+    market_open = dt.time(13,30,0) # 7:30 am
+    market_close = dt.time(19,59,0) # 1:59 pm
 
     if time_now > market_open and time_now < market_close:
         market = True
+        
     else:
-        print('### Market is closed.')
+      #print('### Market is closed.')
+      pass
 
     return(market)
 
@@ -60,16 +63,23 @@ if __name__ == "__main__":
     print('Stocks: ', stocks)
     
     ts = trade_strat.Trader(stocks)
+    
 
     while open_market():
         prices = rh.robinhood.stocks.get_latest_price(stocks)
-        print('prices:', prices)
+        
 
         for i, stock in enumerate(stocks):
             price = float(prices[i])
             print('{} = ${}'.format(stock, price))
-            data = ts.get_historical_prices(stock, span='day')
+            
+            df_prices = ts.get_historical_prices(stock, span='day')
+            sma = ts.get_sma(stock, df_prices, window=12)
+            p_sma = ts.get_price_sma(price, sma)
+            print('p_sma:', p_sma)
+            trade = ts.trade_option(stock, price)
+            print('trade: ', trade)
 
-        time.sleep(10)
+        time.sleep(30)
 
     logout()
