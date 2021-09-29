@@ -9,7 +9,7 @@ class Trader():
 
         self.sma_hour = {stocks[i]: 0 for i in range(0, len(stocks))}
         self.run_time = 0
-        self.buffer = 0.005
+        self.buffer = 0
 
         self.price_sma_hour = {stocks[i]: 0 for i in range(0, len(stocks))}
 
