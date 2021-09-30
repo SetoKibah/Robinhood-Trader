@@ -8,6 +8,7 @@ import pytz
 import pyotp
 # This will login as of 09-30-2021
 # Program WILL execute buy and sell orders now, must be aware of this. Can buy and sell, have dummy print statements for testing new things.
+# Day span only working for extended and after-market. Will test for longer spans during market hours.
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
 print('Current OTP: ', totp)
@@ -156,12 +157,12 @@ if __name__ == "__main__":
             if trade == "BUY":
                 allowable_holdings = int((cash/10)/price) 
                 if allowable_holdings > 5 and holdings[stock] == 0:
-                    #buy(stock, allowable_holdings)
-                    print('### Buy Intention') # Dummy placeholder
+                    buy(stock, allowable_holdings)
+                    #print('### Buy Intention') # Dummy placeholder
             elif trade == "SELL":
                 if holdings[stock] > 0:
-                    #sell(stock, holdings[stock], price)
-                    print('### Sell Intention') # Dummy placeholder
+                    sell(stock, holdings[stock], price)
+                    #print('### Sell Intention') # Dummy placeholder
         
         time.sleep(30)
 
