@@ -4,11 +4,10 @@ import os
 import robin_stocks.robinhood as rh
 import datetime as dt
 import time
+import pytz
 import pyotp
-# This will login as of 09-25-2021
-# Video learning https://www.youtube.com/watch?v=Mx7A6EjbtZU
-
-# Program WILL execute buy and sell orders now, must be aware of this.
+# This will login as of 09-30-2021
+# Program WILL execute buy and sell orders now, must be aware of this. Can buy and sell, have dummy print statements for testing new things.
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
 print('Current OTP: ', totp)
@@ -27,6 +26,11 @@ def login(days):
 def logout():
     rh.logout()
 
+    current_timezone = pytz.timezone("US/Mountain")
+    f = open("log.txt", "a")
+    f.write(f"Logout: {dt.datetime.now(current_timezone)}\n")
+    f.close()
+
 # Stocks acquisition function
 def get_stocks():
     stocks = list()
@@ -34,11 +38,17 @@ def get_stocks():
     stocks.append('PLTR')
     stocks.append('SOFI')
     stocks.append('F')
+    stocks.append('KR')
+    stocks.append('GPRO')
+    stocks.append('EM')
+    stocks.append('GE')
+    stocks.append('CEI')
+    
     return(stocks)
 
 # Market hours function
 def open_market():
-    market = True
+    market = False
     time_now = dt.datetime.now().time()
     
 
@@ -49,9 +59,9 @@ def open_market():
         market = True
         
     else:
-      #print('### Market is closed.')
-      pass
+      print('### Market is closed.')
 
+      
     return(market)
 
 # Function to cash on account
@@ -88,19 +98,35 @@ def sell(stock, holdings, price):
     
     print(f'### Trying to SELL {stock} at ${price}')
 
+    current_timezone = pytz.timezone("US/Mountain")
+    f = open("log.txt", "a")
+    f.write(f"Sell action: {holdings} {stock} at {sell_price} per stock. ---{dt.datetime.now(current_timezone)}---\n")
+    f.close()
+
 def buy(stock, allowable_holdings):
-    # go 10 cents less to ensure you sell all of your stocks, not actually 10 cents less
+    # 10 cents up
     buy_price = round((price+0.1), 2) 
-    buy_order = rh.orders.order_sell_limit(symbol=stock,
-                                            quantity=holdings,
+    buy_order = rh.orders.order_buy_limit(symbol=stock,
+                                            quantity=allowable_holdings,
                                             limitPrice=buy_price,
                                             timeInForce='gfd')
 
     print(f'### Trying to BUY {stock} at ${price}')
+    
+    current_timezone = pytz.timezone("US/Mountain")
+    f = open("log.txt", "a")
+    f.write(f"Buy action: {allowable_holdings} {stock} at {price} per stock. ---{dt.datetime.now(current_timezone)}---\n")
+    f.close()
 
 if __name__ == "__main__":
     
     login(days=1)
+    
+    # Logging section
+    current_timezone = pytz.timezone("US/Mountain")
+    f = open("log.txt", "a")
+    f.write(f"Program started: {dt.datetime.now(current_timezone)}\n")
+    f.close()
 
     stocks = get_stocks()
     print('Stocks: ', stocks)
@@ -110,6 +136,7 @@ if __name__ == "__main__":
     ts = trade_strat.Trader(stocks)
     
     while open_market():
+  
         prices = rh.stocks.get_latest_price(stocks)
         holdings, bought_price = get_holdings_and_bought_price(stocks)
         print(f'holdings: {holdings}')
@@ -130,12 +157,11 @@ if __name__ == "__main__":
                 allowable_holdings = int((cash/10)/price) 
                 if allowable_holdings > 5 and holdings[stock] == 0:
                     #buy(stock, allowable_holdings)
-                    print('Buy Intention...') # Dummy placeholder
+                    print('### Buy Intention') # Dummy placeholder
             elif trade == "SELL":
                 if holdings[stock] > 0:
-                  #sell(stock, holdings[stock], price)
-                  print('Sell Intention...') # Dummy placeholder
-                    
+                    #sell(stock, holdings[stock], price)
+                    print('### Sell Intention') # Dummy placeholder
         
         time.sleep(30)
 
