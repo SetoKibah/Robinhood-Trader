@@ -9,8 +9,15 @@ import pyotp
 
 # This will login as of 09-30-2021
 # Program WILL execute buy and sell orders now, must be aware of this. Can buy and sell, have dummy print statements for testing new things.
-# Day span only working for extended and after-market. Will test for longer spans during market hours.
 # Crypto buy-sell with same strategy?
+
+# CURRENT SETTING: SMA calculated over 1 week of historicals data, longer term strat than Day-Trading to avoid any restrictions. 
+# TEST WEEK: week of 10/04/2021 - 10/08/2021
+# Monday Value: $375.69 (Saturday)
+# Tuesday Value:
+# Wednesday Value:
+# Thursday Value:
+# Friday Value:
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
 #print('Current OTP: ', totp)
@@ -47,6 +54,22 @@ def get_stocks():
     stocks.append('EM')
     stocks.append('GE')
     stocks.append('CEI')
+    stocks.append('PFE')
+    stocks.append('ACB')
+    stocks.append('DAL')
+    stocks.append('BB')
+    stocks.append('SBUX')
+    stocks.append('T')
+    stocks.append('TWTR')
+    stocks.append('UBER')
+    stocks.append('GM')
+    stocks.append('CRON')
+    stocks.append('SIRI')
+    stocks.append('RBLX')
+    stocks.append('MRO')
+    stocks.append('RIOT')
+    stocks.append('ET')
+    stocks.append('SONY') # 24 Stocks monitoring as of 10/2/2021
     
     return(stocks)
 
@@ -151,7 +174,7 @@ if __name__ == "__main__":
             price = float(prices[i])
             print('\n{} = ${}'.format(stock, price))
             
-            df_prices = ts.get_historical_prices(stock, span='day')
+            df_prices = ts.get_historical_prices(stock, span='week')
             sma = ts.get_sma(stock, df_prices, window=12)
             p_sma = ts.get_price_sma(price, sma)
             print('p_sma:', p_sma)
@@ -160,13 +183,17 @@ if __name__ == "__main__":
             if trade == "BUY":
                 allowable_holdings = int((cash/10)/price)
                 print(f"Allowable Holdings: {allowable_holdings}") 
-                if allowable_holdings > 5 and holdings[stock] == 0:
-                    buy(stock, allowable_holdings)
-                    #print('### Buy Intention') # Dummy placeholder
+                if allowable_holdings > 2 and holdings[stock] == 0:
+                    #buy(stock, allowable_holdings)
+                    print('### Buy Intention') # Dummy placeholder
+                else:
+                   print('### Good to buy, no allowable holdings available.')
             elif trade == "SELL":
                 if holdings[stock] > 0:
-                    sell(stock, holdings[stock], price)
-                    #print('### Sell Intention') # Dummy placeholder
+                    #sell(stock, holdings[stock], price)
+                    print('### Sell Intention') # Dummy placeholder
+                else:
+                    print('### Good to sell, but we have not stock.')
         
         time.sleep(30)
 

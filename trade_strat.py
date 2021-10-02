@@ -8,7 +8,7 @@ class Trader():
 
         self.sma_hour = {stocks[i]: 0 for i in range(0, len(stocks))}
         self.run_time = 0
-        self.buffer = 0.006
+        self.buffer = 0.005
 
         self.price_sma_hour = {stocks[i]: 0 for i in range(0, len(stocks))}
 
@@ -18,7 +18,7 @@ class Trader():
         span_interval = {'day': '5minute', 'week': '10minute', 'month': 'hour', '3month': 'hour', 'year': 'day', '5year': 'week'}
         interval = span_interval[span]
 
-        historical_data = rh.stocks.get_stock_historicals(stock, interval=interval, span=span, bounds='extended')
+        historical_data = rh.stocks.get_stock_historicals(stock, interval=interval, span=span, bounds='regular')
         
         df = pd.DataFrame(historical_data)
 
@@ -43,7 +43,7 @@ class Trader():
     def trade_option(self, stock, price):
         # get new sma_hour every 5 minutes
         if self.run_time % (300/60) == 0:
-            df_historical_prices = self.get_historical_prices(stock, span='day')
+            df_historical_prices = self.get_historical_prices(stock, span='week')
             self.sma_hour[stock] = self.get_sma(stock, df_historical_prices[-12:], window=12)
         
         self.price_sma_hour[stock] = self.get_price_sma(price, self.sma_hour[stock])
