@@ -6,12 +6,14 @@ import datetime as dt
 import time
 import pytz
 import pyotp
+
 # This will login as of 09-30-2021
 # Program WILL execute buy and sell orders now, must be aware of this. Can buy and sell, have dummy print statements for testing new things.
 # Day span only working for extended and after-market. Will test for longer spans during market hours.
+# Crypto buy-sell with same strategy?
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
-print('Current OTP: ', totp)
+#print('Current OTP: ', totp)
 
 # Login function
 def login(days):
@@ -21,7 +23,8 @@ def login(days):
                             expiresIn = time_logged_in,
                             scope='internal',
                             by_sms=True,
-                            store_session=True)
+                            store_session=True,
+                            mfa_code =totp)
 
 # Logout function
 def logout():
@@ -155,7 +158,8 @@ if __name__ == "__main__":
             trade = ts.trade_option(stock, price)
             print('trade: ', trade)
             if trade == "BUY":
-                allowable_holdings = int((cash/10)/price) 
+                allowable_holdings = int((cash/10)/price)
+                print(f"Allowable Holdings: {allowable_holdings}") 
                 if allowable_holdings > 5 and holdings[stock] == 0:
                     buy(stock, allowable_holdings)
                     #print('### Buy Intention') # Dummy placeholder

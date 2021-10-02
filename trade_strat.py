@@ -1,7 +1,6 @@
 import pandas as pd
 import robin_stocks.robinhood as rh
 import robin_stocks.helper as helper
-import robin_stocks.urls as urls
 
 class Trader():
     def __init__(self, stocks):
