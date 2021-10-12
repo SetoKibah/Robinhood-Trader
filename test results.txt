@@ -1,0 +1,26 @@
+
+# TEST WEEK: week of 10/04/2021 - 10/08/2021
+# Start and End are based off Market Time
+
+# Monday Start Value: $374.5
+# Monday End Value: $373.84
+
+# Tuesday Start Value: $374.17
+# Tuesday End Value: $363.81 
+#(CEI took a major 54% downfall that the bot bought up. Could potentially result in making big returns, but likely to be an anomoly resulting in loss. Factoring out the CEI loss of ~$11 at 14:37, bot is maintaining a decent profit gain. Curious to see if bot can recover the losses by Friday.)
+
+
+# Wednesday Start Value: $357.84
+# Wednesday End Value: $355.61
+# INCREASED RUN TIME TO 5 MINUTE INTERVALS 10:23
+
+# Thursday Start Value: $358.68
+# Thursday End Value: $361.91
+# Added a .003 additional buffer to Sell orders, thinking to increase gain
+# per sale if possible, while mitigating sales deemed as losses. 09:32
+# Tweaked runtime to be every 2 minutes. 09:51
+# Value at time of change: $361.28
+
+
+# Friday Start Value: Not Recorded
+# Friday End Value: Not Recorded

@@ -6,18 +6,38 @@ import datetime as dt
 import time
 import pytz
 import pyotp
+from replit import db
 
+################################################################
 # This will login as of 09-30-2021
 # Program WILL execute buy and sell orders now, must be aware of this. Can buy and sell, have dummy print statements for testing new things.
-# Crypto buy-sell with same strategy?
 
-# CURRENT SETTING: SMA calculated over 1 week of historicals data, longer term strat than Day-Trading to avoid any restrictions. 
-# TEST WEEK: week of 10/04/2021 - 10/08/2021
-# Monday Value: $375.69 (Saturday)
-# Tuesday Value:
-# Wednesday Value:
-# Thursday Value:
-# Friday Value:
+# CURRENT SETTING: SMA with week setting and with Daytrading allowable_holdings.
+
+
+# TEST WEEK: week of 10/11/2021 - 10/15/2021
+# Start and End are based off Market Time
+
+# Monday Start Value: $361.66
+# Monday End Value: $362.20
+
+
+# Prior to Tuesday start, made a change to the sell trigger. Changed sell buffer of +.003 to +.007. Must achieve a higher Average to trigger the sell, should reduce losses and increase gains. Hoping bot can make trades to push the value up this week.
+
+# Tuesday Start Value:
+# Tuesday End Value:
+
+# Wednesday Start Value:
+# Wednesday End Value:
+
+# Thursday Start Value:
+# Thursday End Value:
+
+
+# Friday Start Value:
+# Friday End Value:
+
+################################################################
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
 #print('Current OTP: ', totp)
@@ -44,34 +64,50 @@ def logout():
 
 # Stocks acquisition function
 def get_stocks():
-    stocks = list()
-    stocks.append('NOK')
-    stocks.append('PLTR')
-    stocks.append('SOFI')
-    stocks.append('F')
-    stocks.append('KR')
-    stocks.append('GPRO')
-    stocks.append('EM')
-    stocks.append('GE')
-    stocks.append('CEI')
-    stocks.append('PFE')
-    stocks.append('ACB')
-    stocks.append('DAL')
-    stocks.append('BB')
-    stocks.append('SBUX')
-    stocks.append('T')
-    stocks.append('TWTR')
-    stocks.append('UBER')
-    stocks.append('GM')
-    stocks.append('CRON')
-    stocks.append('SIRI')
-    stocks.append('RBLX')
-    stocks.append('MRO')
-    stocks.append('RIOT')
-    stocks.append('ET')
-    stocks.append('SONY') # 24 Stocks monitoring as of 10/2/2021
+    stocks = ['NOK',
+              'PLTR',
+              'SOFI',
+              'F',
+              'KR',
+              'GPRO',
+              'EM',
+              'GE',
+              'CEI',
+              'PFE',
+              'ACB',
+              'DAL',
+              'BB',
+              'SBUX',
+              'T',
+              'TWTR',
+              'UBER',
+              'GM',
+              'CRON',
+              'SIRI',
+              'RBLX',
+              'MRO',
+              'RIOT',
+              'ET',
+              'SONY',
+              'VZ',
+              'INTC',
+              'DELL',
+              'ATVI',
+              'NTDOY',
+              'PINS',
+              'HPQ',
+              'BBY',
+              'STX',
+              'LOGI',
+              'GDDY',
+              'DBX',
+              'DXC'] # 38 Stocks monitoring as of 10/2/2021,
     
     return(stocks)
+
+def get_cryptos():
+  cryptos = ['BTC', 'DOGE', 'ETH', 'LTC','BSV','BCH','ETC']
+  return(cryptos)
 
 # Market hours function
 def open_market():
@@ -122,13 +158,17 @@ def sell(stock, holdings, price):
                                             quantity=holdings,
                                             limitPrice=sell_price,
                                             timeInForce='gfd')
+    print(sell_order)
+    if sell_order == {'detail': 'Sell may cause PDT designation.'}:
+        print('Sell may cause PDT designation, cannot place the order.')
     
-    print(f'### Trying to SELL {stock} at ${price}')
+    else:
+        print(f'### Trying to SELL {stock} at ${price}')
 
-    current_timezone = pytz.timezone("US/Mountain")
-    f = open("log.txt", "a")
-    f.write(f"Sell action: {holdings} {stock} at {sell_price} per stock. ---{dt.datetime.now(current_timezone)}---\n")
-    f.close()
+        current_timezone = pytz.timezone("US/Mountain")
+        f = open("log.txt", "a")
+        f.write(f"Sell action: {holdings} {stock} at {sell_price} per stock. ---{dt.datetime.now(current_timezone)}---\n")
+        f.close()
 
 def buy(stock, allowable_holdings):
     # 10 cents up
@@ -139,6 +179,7 @@ def buy(stock, allowable_holdings):
                                             timeInForce='gfd')
 
     print(f'### Trying to BUY {stock} at ${price}')
+    print(buy_order)
     
     current_timezone = pytz.timezone("US/Mountain")
     f = open("log.txt", "a")
@@ -163,38 +204,47 @@ if __name__ == "__main__":
     ts = trade_strat.Trader(stocks)
     
     while open_market():
-  
+       
         prices = rh.stocks.get_latest_price(stocks)
         holdings, bought_price = get_holdings_and_bought_price(stocks)
         print(f'holdings: {holdings}')
         #print(f'bought price: {bought_price}')
-        
-
+      
         for i, stock in enumerate(stocks):
             price = float(prices[i])
-            print('\n{} = ${}'.format(stock, price))
-            
+            print(f'\n{stock} = {price}')
+                
             df_prices = ts.get_historical_prices(stock, span='week')
             sma = ts.get_sma(stock, df_prices, window=12)
             p_sma = ts.get_price_sma(price, sma)
             print('p_sma:', p_sma)
             trade = ts.trade_option(stock, price)
             print('trade: ', trade)
+
             if trade == "BUY":
                 allowable_holdings = int((cash/10)/price)
                 print(f"Allowable Holdings: {allowable_holdings}") 
-                if allowable_holdings > 2 and holdings[stock] == 0:
-                    #buy(stock, allowable_holdings)
-                    print('### Buy Intention') # Dummy placeholder
+                if allowable_holdings >= 1:
+                    if holdings[stock] < allowable_holdings:
+                        modified_holdings = allowable_holdings - holdings[stock]
+                        buy(stock, modified_holdings)
+                        print(modified_holdings)
+                        #print('### Buy Intention to bring us up to the allowable holdings.') # Dummy placeholder
+                    elif holdings[stock] == 0:
+                        buy(stock, allowable_holdings)
+                        #print('### Buy Intention') # Dummy placeholder
+                    else:
+                      print('### Good to buy, but we have our maximum allowed stock.')                      
                 else:
-                   print('### Good to buy, no allowable holdings available.')
+                  print('### Good to buy, no allowable holdings available.')
             elif trade == "SELL":
                 if holdings[stock] > 0:
-                    #sell(stock, holdings[stock], price)
-                    print('### Sell Intention') # Dummy placeholder
+                    sell(stock, holdings[stock], price)
+                    #print('### Sell Intention') # Dummy placeholder
                 else:
-                    print('### Good to sell, but we have not stock.')
+                    print('### Good to sell, but we have no stock currently.')
         
-        time.sleep(30)
+        # 2 minute intervals
+        time.sleep(120)
 
     logout()
