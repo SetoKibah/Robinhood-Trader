@@ -125,20 +125,23 @@ def get_cryptos():
 
 # Market hours function
 def open_market():
+    # Market is set to closed unless conditions are met
     market = False
     time_now = dt.datetime.now().time()
-    
+
+    # Weekday 0-6, 0 is Monday, 6 is Sunday
+    weekday = dt.datetime.now().weekday()
 
     market_open = dt.time(13,30,0) # 7:30 am
     market_close = dt.time(19,59,0) # 1:59 pm
 
-    if time_now > market_open and time_now < market_close:
+    if time_now > market_open and time_now < market_close and weekday < 5:
         market = True
         
     else:
       print('### Market is closed.')
 
-      
+
     return(market)
 
 # Function to cash on account
