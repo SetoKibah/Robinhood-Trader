@@ -9,11 +9,10 @@ import pyotp
 from replit import db
 
 ################################################################
-# This will login as of 09-30-2021
-# Program WILL execute buy and sell orders now, must be aware of this. Can buy and sell, have dummy print statements for testing new things.
-
 # CURRENT SETTING: SMA with week setting and with Daytrading allowable_holdings.
-
+# GOAL: Achieve $400 portfolio value to show that bot is making back losses from testing. Then more money may be allocated to increase profit times.
+# Hopeful to be achieved in 3 weeks from 10/14/2021
+# Hopeful Target date: 10/29/2021
 
 # TEST WEEK: week of 10/11/2021 - 10/15/2021
 # Start and End are based off Market Time
@@ -21,18 +20,21 @@ from replit import db
 # Monday Start Value: $361.66
 # Monday End Value: $362.20
 
-
 # Prior to Tuesday start, made a change to the sell trigger. Changed sell buffer of +.003 to +.007. Must achieve a higher Average to trigger the sell, should reduce losses and increase gains. Hoping bot can make trades to push the value up this week.
 
-# Tuesday Start Value:
-# Tuesday End Value:
+# Tuesday Start Value: $362.34
+# Tuesday End Value: $361.74
 
-# Wednesday Start Value:
-# Wednesday End Value:
+# Wednesday Start Value: $362.48
+# Wednesday End Value: $364.57
 
-# Thursday Start Value:
-# Thursday End Value:
+# Prior to Thursday start, changes made seem to have had an overall positive impact. May increase the sell average to be higher next week, want to see if performance stays steady during this more volatile market time
 
+# Thursday Start Value: $365.17
+# Thursday End Value: $365.32
+
+# Prior to Friday, added p_sma to the log for buy/sell orders.
+# Hoping to adjust p_sma targets to reduce loss. Friday will maintain .007 modifier to sell orders to check for p_sma performance tracking.
 
 # Friday Start Value:
 # Friday End Value:
@@ -101,7 +103,19 @@ def get_stocks():
               'LOGI',
               'GDDY',
               'DBX',
-              'DXC'] # 38 Stocks monitoring as of 10/2/2021,
+              'DXC',
+              'IMCC',
+              'INCR',
+              'NVS',
+              'TCEHY',
+              'ORCL',
+              'AZN',
+              'CSCO',
+              'AVGO',
+              'U',
+              'EA',
+              'PCRFY',
+              'HAS'] # 50 Stocks monitoring as of 10/13/2021,
     
     return(stocks)
 
@@ -151,7 +165,7 @@ def get_holdings_and_bought_price(stocks):
     
     return(holdings, bought_price)
 
-def sell(stock, holdings, price):
+def sell(stock, holdings, price, p_sma):
     # go 10 cents less to ensure you sell all of your stocks, not actually 10 cents less
     sell_price = round((price-0.1), 2) 
     sell_order = rh.orders.order_sell_limit(symbol=stock,
@@ -167,10 +181,10 @@ def sell(stock, holdings, price):
 
         current_timezone = pytz.timezone("US/Mountain")
         f = open("log.txt", "a")
-        f.write(f"Sell action: {holdings} {stock} at {sell_price} per stock. ---{dt.datetime.now(current_timezone)}---\n")
+        f.write(f"Sell action: {holdings} {stock} at {sell_price} per stock. SMA at time: {p_sma} ---{dt.datetime.now(current_timezone)}---\n")
         f.close()
 
-def buy(stock, allowable_holdings):
+def buy(stock, allowable_holdings, p_sma):
     # 10 cents up
     buy_price = round((price+0.1), 2) 
     buy_order = rh.orders.order_buy_limit(symbol=stock,
@@ -183,7 +197,7 @@ def buy(stock, allowable_holdings):
     
     current_timezone = pytz.timezone("US/Mountain")
     f = open("log.txt", "a")
-    f.write(f"Buy action: {allowable_holdings} {stock} at {price} per stock. ---{dt.datetime.now(current_timezone)}---\n")
+    f.write(f"Buy action: {allowable_holdings} {stock} at {price} per stock. SMA at time: {p_sma} ---{dt.datetime.now(current_timezone)}---\n")
     f.close()
 
 if __name__ == "__main__":
@@ -231,7 +245,7 @@ if __name__ == "__main__":
                         print(modified_holdings)
                         #print('### Buy Intention to bring us up to the allowable holdings.') # Dummy placeholder
                     elif holdings[stock] == 0:
-                        buy(stock, allowable_holdings)
+                        buy(stock, allowable_holdings, p_sma)
                         #print('### Buy Intention') # Dummy placeholder
                     else:
                       print('### Good to buy, but we have our maximum allowed stock.')                      
@@ -239,7 +253,7 @@ if __name__ == "__main__":
                   print('### Good to buy, no allowable holdings available.')
             elif trade == "SELL":
                 if holdings[stock] > 0:
-                    sell(stock, holdings[stock], price)
+                    sell(stock, holdings[stock], price, p_sma)
                     #print('### Sell Intention') # Dummy placeholder
                 else:
                     print('### Good to sell, but we have no stock currently.')
