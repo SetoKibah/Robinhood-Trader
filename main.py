@@ -1,6 +1,7 @@
 import config
 import trade_strat
 import os
+import random
 import robin_stocks.robinhood as rh
 import datetime as dt
 import time
@@ -14,28 +15,22 @@ from replit import db
 # Hopeful to be achieved in 3 weeks from 10/14/2021
 # Hopeful Target date: 10/29/2021
 
-# TEST WEEK: week of 10/11/2021 - 10/15/2021
+# TEST WEEK: week of 10/25/2021 - 10/29/2021
 # Start and End are based off Market Time
 
-# Monday Start Value: $361.66
-# Monday End Value: $362.20
+# As a result of a poor end-of-week performance last week, modifier for sell SMA has been increased to 0.01 additional trigger. Intent is to reduce poor sell orders in favor of higher-trend sales. Unlikely to hit target if market fails to deliver.
 
-# Prior to Tuesday start, made a change to the sell trigger. Changed sell buffer of +.003 to +.007. Must achieve a higher Average to trigger the sell, should reduce losses and increase gains. Hoping bot can make trades to push the value up this week.
+# Monday Start Value:
+# Monday End Value:
 
-# Tuesday Start Value: $362.34
-# Tuesday End Value: $361.74
+# Tuesday Start Value:
+# Tuesday End Value:
 
-# Wednesday Start Value: $362.48
-# Wednesday End Value: $364.57
+# Wednesday Start Value:
+# Wednesday End Value:
 
-# Prior to Thursday start, changes made seem to have had an overall positive impact. May increase the sell average to be higher next week, want to see if performance stays steady during this more volatile market time
-
-# Thursday Start Value: $365.17
-# Thursday End Value: $365.32
-
-# Prior to Friday, added p_sma to the log for buy/sell orders.
-# Hoping to adjust p_sma targets to reduce loss. Friday will maintain .007 modifier to sell orders to check for p_sma performance tracking.
-
+# Thursday Start Value:
+# Thursday End Value:
 # Friday Start Value:
 # Friday End Value:
 
@@ -43,6 +38,7 @@ from replit import db
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
 #print('Current OTP: ', totp)
+#time.sleep(30)
 
 # Login function
 def login(days):
@@ -86,6 +82,7 @@ def get_stocks():
               'GM',
               'CRON',
               'SIRI',
+              'SPCE',
               'RBLX',
               'MRO',
               'RIOT',
@@ -115,8 +112,13 @@ def get_stocks():
               'U',
               'EA',
               'PCRFY',
-              'HAS'] # 50 Stocks monitoring as of 10/13/2021,
-    
+              'HAS',
+              'PEP',
+              'FCEL',
+              'ZNGA',
+              'NCLH',
+              'DKNG'] # 56 Stocks monitoring as of 10/21/2021
+    random.shuffle(stocks)
     return(stocks)
 
 def get_cryptos():
@@ -239,12 +241,14 @@ if __name__ == "__main__":
             print('trade: ', trade)
 
             if trade == "BUY":
+                # Variable to keep us from spending all of our money on a single stock.
                 allowable_holdings = int((cash/10)/price)
+
                 print(f"Allowable Holdings: {allowable_holdings}") 
                 if allowable_holdings >= 1:
                     if holdings[stock] < allowable_holdings:
                         modified_holdings = allowable_holdings - holdings[stock]
-                        buy(stock, modified_holdings)
+                        buy(stock, modified_holdings, p_sma)
                         print(modified_holdings)
                         #print('### Buy Intention to bring us up to the allowable holdings.') # Dummy placeholder
                     elif holdings[stock] == 0:

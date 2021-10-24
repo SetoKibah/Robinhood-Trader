@@ -24,3 +24,55 @@
 
 # Friday Start Value: Not Recorded
 # Friday End Value: Not Recorded
+##################################################################
+
+# TEST WEEK: week of 10/11/2021 - 10/15/2021
+# Start and End are based off Market Time
+
+# Monday Start Value: $361.66
+# Monday End Value: $362.20
+
+# Prior to Tuesday start, made a change to the sell trigger. Changed sell buffer of +.003 to +.007. Must achieve a higher Average to trigger the sell, should reduce losses and increase gains. Hoping bot can make trades to push the value up this week.
+
+# Tuesday Start Value: $362.34
+# Tuesday End Value: $361.74
+
+# Wednesday Start Value: $362.48
+# Wednesday End Value: $364.57
+
+# Prior to Thursday start, changes made seem to have had an overall positive impact. May increase the sell average to be higher next week, want to see if performance stays steady during this more volatile market time
+
+# Thursday Start Value: $365.17
+# Thursday End Value: $365.32
+
+# Prior to Friday, added p_sma to the log for buy/sell orders.
+# Hoping to adjust p_sma targets to reduce loss. Friday will maintain .007 modifier to sell orders to check for p_sma performance tracking.
+
+# Friday Start Value: $366.24
+# Friday End Value: $366.48
+
+################################################################
+
+# TEST WEEK: week of 10/18/2021 - 10/22/2021
+# Start and End are based off Market Time
+
+# Monday Start Value: $366.58
+# Monday End Value: $365.85
+# Change: -0.002%
+
+# Tuesday Start Value: $365.68
+# Tuesday End Value: $367.89
+# Change: +0.006%
+
+# Wednesday Start Value: $367.90
+# Wednesday End Value: $369.65
+# Change: +0.005%
+
+# Thursday Start Value: $368.65
+# Thursday End Value: $367.92
+# Change: -0.002%
+
+# Friday Start Value:
+# Friday End Value:
+
+################################################################

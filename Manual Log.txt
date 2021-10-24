@@ -1,0 +1,74 @@
+10-18-2021
+############################################
+F bought 1 at $15.57 - 07:34
+GPRO bought 1 at $8.85 - 07:34
+ACB bought 3 at $6.97 - 07:34
+BB bought 2 at $10.32 - 07:34
+CRON bought 3 at $5.44 - 07:34
+IMCC bought 6 at $3.47 - 07:34
+INCR bought 1 at $6.98 - 07:34
+PCRFY bought 1 at $12.34 - 07:34
+SIRI bought 1 at $5.99 - 07:42
+EM sold 8 at $2.96  - 08:25
+CEI bought 7 at $1.40 - 08:38
+ET bought 1 at $10.06 - 09:32
+NOK bought 1 at $5.92
+#############################################
+
+10-19-2021
+CEI sold 7 at $1.53 - 8:09 (Previous price $1.40, $0.13 gain per share, $0.91)
+EM bought 3 at $3.15 - 09:25
+ACB sold 3 at $7.17 - 10:51 (Previous price $6.97, $0.20 gain per share, $0.60)
+CRON sold 4 at $5.48 - 10:51 (Previous price $5.44, $0.04 gain per share, $0.16)
+BB sold 2 at $10.45 - 11:00 (Previous price $10.32, $0.12 gain per share, $0.24)
+CEI bought 5 at $1.72 - 11:31
+IMCC sold 7 at $3.33 - 11:42 (Previous price $3.47, $0.13 loss per share, $0.91)
+IMCC bought 2 at $3.36 - 13:42
+
+Total Gain: $1.00
+#############################################
+
+10-20-2021
+CEI sold 5 at $1.84 - 07:30 (Previous price $1.72)
+EM sold 1 at $3.06 - 07:30 (Previous price $3.15)
+IMCC bought 1 at $3.35 per share - 07:30
+BB bought 1 at $11.18 per share - 07:32
+INCR bought 1 at $7.00 per share - 07:32
+CRON bought 2 at $5.75 per  share - 07:34
+GPRO sold 2 at $9.25 per share - 07:45 (Previous price $8.80 and $8.85)
+F sold 1 at $15.63 per share - 07:47 (Previous price $15.63)
+ACB bought 1 at $7.37 per share - 07:47
+SIRI sold 4 at $6.12 per share - 08:06 (Previous prices: $5.99, 3 $6.17)
+ACB sold 1 at $7.51 per share - 08:31
+ET sold 1 at $10.16 pe share - 08:38 (Previous price $10.06)
+CEI bought 7 at $1.74 per share - 08:52
+ACB bought 1 at $7.60 per share - 11:10
+GPRO 1 bought at $9.15 per share - 11:14
+
+#############################################
+
+10-21-2021
+SIRI bought 2 at $6.14 per share - 08:03
+INCR bought 1 at $6.72 per share - 08:03
+IMCC sold 3 at $3.28 per share - 08:26 (Previous price)
+BB bought 1 at $11.44 per share - 08:41
+CEI bought 1 share at $1.68 per share - 08:47
+ET bought 1 share at $10.10 per share - 08:51
+EM bought 1 share at $2.97 per share - 09:06
+ACB bought 1 share at $7.58 per share - 09:08
+CRON bought 2 at $5.89 per share - 09:29
+IMCC bought 2 at $3.29 per share - 10:11
+CEI sold 9 at $1.69 per share - 10:43
+CEI bought 4 at $1.67 per share - 10:54
+
+#############################################
+10-22-2021
+FCEL bought 2 at $7.70 per share - 07:45
+IMCC bought 3 at $3.23 per share - 07:45
+PCRFY sold 2 at $12.30 per share (previous price 12.03 and 12.35)
+ZNGA bought 2 at $7.63 per share
+F bought 1 at $16.40
+CEI bought 1 at $1.42
+NOK bought 1 at $5.92
+MRO bought 1 at $16.24
+CRON bought 1 at $5.7 per share
