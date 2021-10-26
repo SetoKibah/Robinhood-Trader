@@ -20,11 +20,11 @@ from replit import db
 
 # As a result of a poor end-of-week performance last week, modifier for sell SMA has been increased to 0.01 additional trigger. Intent is to reduce poor sell orders in favor of higher-trend sales. Unlikely to hit target if market fails to deliver.
 
-# Monday Start Value:
-# Monday End Value:
+# Monday Start Value: $362.75
+# Monday End Value: $364.32
 
-# Tuesday Start Value:
-# Tuesday End Value:
+# Tuesday Start Value: $364.69
+# Tuesday End Value: $
 
 # Wednesday Start Value:
 # Wednesday End Value:
@@ -227,11 +227,12 @@ if __name__ == "__main__":
         prices = rh.stocks.get_latest_price(stocks)
         holdings, bought_price = get_holdings_and_bought_price(stocks)
         print(f'holdings: {holdings}')
-        #print(f'bought price: {bought_price}')
+        print(f'bought price: {bought_price}')
       
         for i, stock in enumerate(stocks):
             price = float(prices[i])
-            print(f'\n{stock} = {price}')
+            print(f'\n{stock} = ${price}')
+            print(f'Last bought price: ${bought_price[stock]}')
                 
             df_prices = ts.get_historical_prices(stock, span='week')
             sma = ts.get_sma(stock, df_prices, window=12)
@@ -257,13 +258,18 @@ if __name__ == "__main__":
                     else:
                       print('### Good to buy, but we have our maximum allowed stock.')                      
                 else:
-                  print('### Good to buy, no allowable holdings available.')
+                    print('### Good to buy, no allowable holdings available.')
+            
             elif trade == "SELL":
                 if holdings[stock] > 0:
-                    sell(stock, holdings[stock], price, p_sma)
-                    #print('### Sell Intention') # Dummy placeholder
+                    # Check to see if selling now will give a profit. If not, do not sell
+                    if price < bought_price[stock]:
+                        print(f"Refusing to sell. Current price ${price} is lower than original purchase price of ${bought_price[stock]}")
+                    else:
+                        sell(stock, holdings[stock], price, p_sma)
+                        #print('### Sell Intention') # Dummy placeholder
                 else:
-                    print('### Good to sell, but we have no stock currently.')
+                      print('### Good to sell, but we have no stock currently.')
         
         # 2 minute intervals
         time.sleep(120)

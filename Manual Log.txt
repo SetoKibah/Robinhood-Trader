@@ -72,3 +72,11 @@ CEI bought 1 at $1.42
 NOK bought 1 at $5.92
 MRO bought 1 at $16.24
 CRON bought 1 at $5.7 per share
+
+#############################################
+10-26-2021
+FCEL sold 1 at $7.61 per share - 07:30 (Previous price $7.26)
+IMCC bought 1 at $3.06 per share - 07:30
+EM bought 1 at $2.90 per share - 07:30
+FCEL bought 1 at $7.40 per share - 07:49
+ET sold 1 at $10.12 per share - 08:19 (Previous price $10.12)
