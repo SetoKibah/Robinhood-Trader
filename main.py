@@ -303,7 +303,7 @@ if __name__ == "__main__":
                 else:
                       print('### Good to sell, but we have no stock currently.')
         
-        # 2 minute intervals
-        time.sleep(300)
+        # 10 minute intervals
+        time.sleep(600)
           
     logout()
