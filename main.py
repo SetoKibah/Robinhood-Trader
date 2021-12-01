@@ -11,28 +11,27 @@ from replit import db
 
 ################################################################
 # CURRENT SETTING: SMA with week setting and with Daytrading allowable_holdings.
-# GOAL: Achieve $400 portfolio value to show that bot is making back losses from testing. Then more money may be allocated to increase profit times.
-# Hopeful to be achieved in 3 weeks from 10/14/2021
-# Hopeful Target date: 10/29/2021
 
-# TEST WEEK: week of 10/25/2021 - 10/29/2021
+# POSSIBLE CHANGE: Instead of Cash value, go off of Buy power to keep money flowing and working in our favor as opposed to being limited too much.
+
+# TEST WEEK: week of 11/22/2021 - 11/26/2021
 # Start and End are based off Market Time
+# Etherium as a day-trade option is being considered for after-market times, to be integrated into normal operations asynchronously.
 
-# As a result of a poor end-of-week performance last week, modifier for sell SMA has been increased to 0.01 additional trigger. Intent is to reduce poor sell orders in favor of higher-trend sales. Unlikely to hit target if market fails to deliver.
+# Monday Start Value: $
+# Monday End Value: $
 
-# Monday Start Value: $362.75
-# Monday End Value: $364.32
-
-# Tuesday Start Value: $364.69
+# Tuesday Start Value: $
 # Tuesday End Value: $
 
-# Wednesday Start Value:
-# Wednesday End Value:
+# Wednesday Start Value: $ 
+# Wednesday End Value: $
 
-# Thursday Start Value:
-# Thursday End Value:
-# Friday Start Value:
-# Friday End Value:
+# Thursday Start Value: $ CLOSED FOR THANKSGIVING
+# Thursday End Value: $ CLOSED FOR THANKSGIVING
+
+# Friday Start Value: $
+# Friday End Value: $
 
 ################################################################
 
@@ -55,10 +54,10 @@ def login(days):
 def logout():
     rh.logout()
 
-    current_timezone = pytz.timezone("US/Mountain")
-    f = open("log.txt", "a")
-    f.write(f"Logout: {dt.datetime.now(current_timezone)}\n")
-    f.close()
+    #current_timezone = pytz.timezone("US/Mountain")
+    #f = open("log.txt", "a")
+    #f.write(f"Logout: {dt.datetime.now(current_timezone)}\n")
+    #f.close()
 
 # Stocks acquisition function
 def get_stocks():
@@ -68,15 +67,15 @@ def get_stocks():
               'F',
               'KR',
               'GPRO',
-              'EM',
+              #'EM',
               'GE',
-              'CEI',
               'PFE',
               'ACB',
-              'DAL',
-              'BB',
+              #'DAL',
+              #'BB',
               'SBUX',
               'T',
+              'IMCC',
               'TWTR',
               'UBER',
               'GM',
@@ -101,7 +100,6 @@ def get_stocks():
               'GDDY',
               'DBX',
               'DXC',
-              'IMCC',
               'INCR',
               'NVS',
               'TCEHY',
@@ -116,14 +114,32 @@ def get_stocks():
               'PEP',
               'FCEL',
               'ZNGA',
-              'NCLH',
-              'DKNG'] # 56 Stocks monitoring as of 10/21/2021
+              #'NCLH', NCLH has taken a massive 10% loss since we bought it, we are manually stepping out and waiting for stability.
+              'DKNG',
+              'BAC',
+              'PYPL',
+              'WFC',
+              'TFC',
+              'UBS',
+              'VEOEY',
+              'ROL',
+              'XOM',
+              'EQNR',
+              'D',
+              'VMW',
+              'MCFE',
+              'ABNB',
+              'VG',
+              'UAL',
+              'BIDU',
+              'DIS',
+              'BTCM',
+              'SNDL',
+              'NIO',
+              'OXY',
+              'EC'] # 75 Stocks monitoring as of 11/23/2021
     random.shuffle(stocks)
     return(stocks)
-
-def get_cryptos():
-  cryptos = ['BTC', 'DOGE', 'ETH', 'LTC','BSV','BCH','ETC']
-  return(cryptos)
 
 # Market hours function
 def open_market():
@@ -134,8 +150,8 @@ def open_market():
     # Weekday 0-6, 0 is Monday, 6 is Sunday
     weekday = dt.datetime.now().weekday()
 
-    market_open = dt.time(13,30,0) # 7:30 am
-    market_close = dt.time(19,59,0) # 1:59 pm
+    market_open = dt.time(14,33,0) # 7:32 am
+    market_close = dt.time(20,58,0) # 1:58 pm
 
     if time_now > market_open and time_now < market_close and weekday < 5:
         market = True
@@ -170,6 +186,7 @@ def get_holdings_and_bought_price(stocks):
     
     return(holdings, bought_price)
 
+
 def sell(stock, holdings, price, p_sma):
     # go 10 cents less to ensure you sell all of your stocks, not actually 10 cents less
     sell_price = round((price-0.1), 2) 
@@ -179,14 +196,14 @@ def sell(stock, holdings, price, p_sma):
                                             timeInForce='gfd')
     print(sell_order)
     if sell_order == {'detail': 'Sell may cause PDT designation.'}:
-        print('Sell may cause PDT designation, cannot place the order.')
+        print('Sell may cause PDT designation, cannot place the order today.')
     
     else:
         print(f'### Trying to SELL {stock} at ${price}')
 
         current_timezone = pytz.timezone("US/Mountain")
         f = open("log.txt", "a")
-        f.write(f"Sell action: {holdings} {stock} at {sell_price} per stock. SMA at time: {p_sma} ---{dt.datetime.now(current_timezone)}---\n")
+        f.write(f"Sell action: {holdings} {stock} at ${sell_price:.2f} per stock. SMA at time: {p_sma:2} ---{dt.datetime.now(current_timezone):%m-%d-%Y, %H:%M:%S}---\n")
         f.close()
 
 def buy(stock, allowable_holdings, p_sma):
@@ -202,7 +219,7 @@ def buy(stock, allowable_holdings, p_sma):
     
     current_timezone = pytz.timezone("US/Mountain")
     f = open("log.txt", "a")
-    f.write(f"Buy action: {allowable_holdings} {stock} at {price} per stock. SMA at time: {p_sma} ---{dt.datetime.now(current_timezone)}---\n")
+    f.write(f"Buy action: {allowable_holdings} {stock} at ${price:.2f} per stock. SMA at time: {p_sma:2} ---{dt.datetime.now(current_timezone):%m-%d-%Y, %H:%M:%S}---\n")
     f.close()
 
 if __name__ == "__main__":
@@ -211,12 +228,22 @@ if __name__ == "__main__":
     
     # Logging section
     current_timezone = pytz.timezone("US/Mountain")
-    f = open("log.txt", "a")
-    f.write(f"Program started: {dt.datetime.now(current_timezone)}\n")
-    f.close()
+    #f = open("log.txt", "a")
+    #f.write(f"Program started: {dt.datetime.now(current_timezone)}\n")
+    #f.close()
+    #####################################################
+    #rh_cash_test = rh.account.build_user_profile()
+    #print(rh_cash_test)
 
+    #rh_cash_test = rh.account.load_account_profile()
+    #print(rh_cash_test.keys())
+    #####################################################
+    #print('Test End...')
+    #time.sleep(30)
+    
+    
     stocks = get_stocks()
-    print('Stocks: ', stocks)
+    #print('Stocks: ', stocks)
     cash, equity = get_cash()
     print(f'RH Cash: {cash} RH Equity: {equity}')
 
@@ -228,13 +255,15 @@ if __name__ == "__main__":
         holdings, bought_price = get_holdings_and_bought_price(stocks)
         print(f'holdings: {holdings}')
         print(f'bought price: {bought_price}')
+        
       
         for i, stock in enumerate(stocks):
             price = float(prices[i])
             print(f'\n{stock} = ${price}')
-            print(f'Last bought price: ${bought_price[stock]}')
-                
-            df_prices = ts.get_historical_prices(stock, span='week')
+            print(f'Average bought price: ${round(bought_price[stock], 4)}')
+            sell_threshold = round(bought_price[stock] + 0.15, 4)
+            
+            df_prices = ts.get_historical_prices(stock, span='month')
             sma = ts.get_sma(stock, df_prices, window=12)
             p_sma = ts.get_price_sma(price, sma)
             print('p_sma:', p_sma)
@@ -243,7 +272,9 @@ if __name__ == "__main__":
 
             if trade == "BUY":
                 # Variable to keep us from spending all of our money on a single stock.
-                allowable_holdings = int((cash/10)/price)
+                allowable_holdings = int((cash/7)/price)
+                if allowable_holdings < 0:
+                    allowable_holdings = allowable_holdings * -1
 
                 print(f"Allowable Holdings: {allowable_holdings}") 
                 if allowable_holdings >= 1:
@@ -256,15 +287,16 @@ if __name__ == "__main__":
                         buy(stock, allowable_holdings, p_sma)
                         #print('### Buy Intention') # Dummy placeholder
                     else:
-                      print('### Good to buy, but we have our maximum allowed stock.')                      
+                      print('### Good to buy, but we have our maximum allowed stock.')  
+                                          
                 else:
                     print('### Good to buy, no allowable holdings available.')
             
             elif trade == "SELL":
                 if holdings[stock] > 0:
                     # Check to see if selling now will give a profit. If not, do not sell
-                    if price < bought_price[stock]:
-                        print(f"Refusing to sell. Current price ${price} is lower than original purchase price of ${bought_price[stock]}")
+                    if price < sell_threshold:
+                        print(f"Refusing to sell. Current price ${price} is lower than original average purchase price of ${sell_threshold}")
                     else:
                         sell(stock, holdings[stock], price, p_sma)
                         #print('### Sell Intention') # Dummy placeholder
@@ -272,6 +304,6 @@ if __name__ == "__main__":
                       print('### Good to sell, but we have no stock currently.')
         
         # 2 minute intervals
-        time.sleep(120)
-
+        time.sleep(300)
+          
     logout()

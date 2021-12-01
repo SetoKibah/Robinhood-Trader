@@ -76,3 +76,29 @@
 # Friday End Value:
 
 ################################################################
+
+
+# TEST WEEK: week of 10/25/2021 - 10/29/2021
+# Start and End are based off Market Time
+
+# As a result of a poor end-of-week performance last week, modifier for sell SMA has been increased to 0.01 additional trigger. Intent is to reduce poor sell orders in favor of higher-trend sales. Unlikely to hit target if market fails to deliver.
+
+# Monday Start Value: $362.75
+# Monday End Value: $364.32
+
+# Tuesday Start Value: $364.69
+# Tuesday End Value: $362.38
+
+# Partway through Tuesday, the last bought price has been set as the limit.
+
+# Limit has been set to $0.05 above the bought price.
+# Wednesday Start Value: $362.31
+# Wednesday End Value: $356.83
+
+# Thursday Start Value: $358.82
+# Thursday End Value: $361.75
+
+# Friday Start Value: $360.61
+# Friday End Value:
+
+################################################################

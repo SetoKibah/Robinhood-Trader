@@ -8,7 +8,7 @@ class Trader():
 
         self.sma_hour = {stocks[i]: 0 for i in range(0, len(stocks))}
         self.run_time = 0
-        self.buffer = 0.005
+        self.buffer = 0.003
 
         self.price_sma_hour = {stocks[i]: 0 for i in range(0, len(stocks))}
 
@@ -43,13 +43,13 @@ class Trader():
     def trade_option(self, stock, price):
         # get new sma_hour every 5 minutes
         if self.run_time % (300/60) == 0:
-            df_historical_prices = self.get_historical_prices(stock, span='week')
+            df_historical_prices = self.get_historical_prices(stock, span='month')
             self.sma_hour[stock] = self.get_sma(stock, df_historical_prices[-12:], window=12)
         
         self.price_sma_hour[stock] = self.get_price_sma(price, self.sma_hour[stock])
         p_sma = self.price_sma_hour[stock]
 
-        i1 = "BUY" if self.price_sma_hour[stock]<(1.0 - self.buffer) else "SELL" if self.price_sma_hour[stock]>(1.0 + self.buffer + .01) else "NONE"
+        i1 = "BUY" if self.price_sma_hour[stock]<(1.0 - self.buffer) else "SELL" if self.price_sma_hour[stock]>(1.0 + self.buffer + .007) else "NONE"
         if i1 == "BUY":
             trade = "BUY"
         elif i1 == "SELL":

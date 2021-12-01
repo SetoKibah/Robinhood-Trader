@@ -80,3 +80,60 @@ IMCC bought 1 at $3.06 per share - 07:30
 EM bought 1 at $2.90 per share - 07:30
 FCEL bought 1 at $7.40 per share - 07:49
 ET sold 1 at $10.12 per share - 08:19 (Previous price $10.12)
+
+#############################################
+10-27-2021
+# 0.05 Sell from average buy should be in effect.
+CEI bought 6 at $1.29 per share - 07:36
+SPCE bought 1 at $18.75 per share - 07:36
+MRO bought 1 at $16.49 per share - 07:36
+ET bought 2 shares at $9.85 per share - 07:36
+EM bought 3 shares at $2.98 per share - 07:36
+PCRFY bought 1 share at $13.42 per share - 07:36
+IMCC bought 3 shares at $2.97 per share - 07:36
+GPRO bought 1 share at $8.62 per share - 07:38
+INCR bought 1 share at $6.82 per share - 07:47
+SIRI bought 1 share at $6.02 per share - 07:49
+FCEL sold 1 share at $7.46 per share - 07:49 (prevoius price $07.40)
+SOFI bought 1 share at $19.83 per share - 08:04
+IMCC bought 1 share at $2.94 per share - 08:04
+ACB bought 2 shares at $7.02 per share - 08:25
+FCEL bought 2 shares at $7.24 per share - 08:41
+EM bought 1 share at $2.93 per share - 09:07
+
+#############################################
+10-28-2021
+SOFI sold 1 share at $20.01 per share - 07:45 (previous $19.83) + $0.18
+F sold 1 share at $17.33 per share - 07:45 (previous $16.40) + $0.93
+FCEL sold 2 shares at $7.29 per share - 07:54 (previous $7.24) + $0.10
+
+#############################################
+10-29-2021
+SPCE sell 1 at $18.87, previous $18.75 - 07:51
+
+#############################################
+11-01-2021
+MRO sell 1 at $16.68, previous $16.49 - 07:30
+SIRI sell 3 at $6.15 per share, previous $6.02, ($6.14)2 -  07:41
+BB sell 1 at $11.23 per share, previous $11.18 - 08:28
+BB bought 1 at $11.19 per share - 10:35
+BB sold 1 at $11.36 - 11:18
+FCEL bought 1 at $9.22 per share - 12:00
+FCEL sell 1 at $9.37, previous $9.22 - 13:02
+
+#############################################
+11-02-2021
+BB bought 1 share at $11.18 per share - 07:34
+FCEL bought 1 share at $9.30 per share - 08:22
+
+#############################################
+11-03-2021
+BB Sell 1 share at $11.75, previous $11.18 - 07:35
+ZNGA bought 2 at $7.15 per - 07:37
+Buy action: 1 DXC at  $32.39 per stock.
+Buy action: 7 IMCC at $2.4 per stock. 
+Buy action: 1 PLTR at $25.2656 per stock. 
+Buy action: 2 MRO at  $16.6806 per stock.
+Buy action: 2 FCEL at $9.035 per stock. 
+Buy action: 1 RIOT at $29.93 per stock.
+Buy action: 1 NCLH at $26.105 per stock.
