@@ -1,6 +1,7 @@
 import pandas as pd
 import robin_stocks.robinhood as rh
 import robin_stocks.helper as helper
+from replit import db
 
 class Trader():
     def __init__(self, stocks):

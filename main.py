@@ -10,34 +10,14 @@ import pyotp
 from replit import db
 
 ################################################################
-# CURRENT SETTING: SMA with week setting and with Daytrading allowable_holdings.
+# CURRENT SETTING: SMA with month setting and with Daytrading allowable_holdings.
 
-# POSSIBLE CHANGE: Instead of Cash value, go off of Buy power to keep money flowing and working in our favor as opposed to being limited too much.
-
-# TEST WEEK: week of 11/22/2021 - 11/26/2021
-# Start and End are based off Market Time
-# Etherium as a day-trade option is being considered for after-market times, to be integrated into normal operations asynchronously.
-
-# Monday Start Value: $
-# Monday End Value: $
-
-# Tuesday Start Value: $
-# Tuesday End Value: $
-
-# Wednesday Start Value: $ 
-# Wednesday End Value: $
-
-# Thursday Start Value: $ CLOSED FOR THANKSGIVING
-# Thursday End Value: $ CLOSED FOR THANKSGIVING
-
-# Friday Start Value: $
-# Friday End Value: $
-
-################################################################
+# 01/11/2022: Defense Threshold of -8% has been set, as well as a profit sale of 8% for testing purposes. Will adjust and update. Returning bot to 24/7 runtime mode.
+###############################################################
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
-#print('Current OTP: ', totp)
-#time.sleep(30)
+print('Current OTP: ', totp)
+#time.sleep(180)
 
 # Login function
 def login(days):
@@ -67,12 +47,12 @@ def get_stocks():
               'F',
               'KR',
               'GPRO',
-              #'EM',
+              'EM',
               'GE',
               'PFE',
               'ACB',
-              #'DAL',
-              #'BB',
+              'DAL',
+              'BB',
               'SBUX',
               'T',
               'IMCC',
@@ -114,7 +94,7 @@ def get_stocks():
               'PEP',
               'FCEL',
               'ZNGA',
-              #'NCLH', NCLH has taken a massive 10% loss since we bought it, we are manually stepping out and waiting for stability.
+              'NCLH',
               'DKNG',
               'BAC',
               'PYPL',
@@ -137,9 +117,17 @@ def get_stocks():
               'SNDL',
               'NIO',
               'OXY',
-              'EC'] # 75 Stocks monitoring as of 11/23/2021
+              'EC']
+    print(f"###{len(stocks)} STOCKS CURRENTLY MONITORED###")
     random.shuffle(stocks)
     return(stocks)
+
+def set_ticker_conditions():
+    tickers = get_stocks()
+    for stock in stocks:
+      db[stock] = True
+      
+
 
 # Market hours function
 def open_market():
@@ -165,10 +153,16 @@ def open_market():
 # Function to cash on account
 def get_cash():
     rh_cash = rh.account.build_user_profile()
+
+    rh_profile = rh.account.load_account_profile()
+    buying_power = float(rh_profile['buying_power'])
     
-    cash = float(rh_cash['cash'])
+    # Use this if we want ot hold money in reserve
+    #cash = float(rh_cash['cash'])
     equity = float(rh_cash['equity'])
-    return(cash, equity)
+
+    # Replace with cash if we want to hold money in reserve
+    return(buying_power, equity)
 
 # Function for getting bought prices and holdings
 def get_holdings_and_bought_price(stocks):
@@ -248,6 +242,9 @@ if __name__ == "__main__":
     print(f'RH Cash: {cash} RH Equity: {equity}')
 
     ts = trade_strat.Trader(stocks)
+
+    #print(f"{stocks[0]}: {db[stocks[0]]}")
+    
     
     while open_market():
        
@@ -256,54 +253,79 @@ if __name__ == "__main__":
         print(f'holdings: {holdings}')
         print(f'bought price: {bought_price}')
         
-      
+        # Traverse the stock listings and make decisions on each ticker.
         for i, stock in enumerate(stocks):
-            price = float(prices[i])
-            print(f'\n{stock} = ${price}')
-            print(f'Average bought price: ${round(bought_price[stock], 4)}')
-            sell_threshold = round(bought_price[stock] + 0.15, 4)
-            
-            df_prices = ts.get_historical_prices(stock, span='month')
-            sma = ts.get_sma(stock, df_prices, window=12)
-            p_sma = ts.get_price_sma(price, sma)
-            print('p_sma:', p_sma)
-            trade = ts.trade_option(stock, price)
-            print('trade: ', trade)
 
-            if trade == "BUY":
-                # Variable to keep us from spending all of our money on a single stock.
-                allowable_holdings = int((cash/7)/price)
-                if allowable_holdings < 0:
-                    allowable_holdings = allowable_holdings * -1
+            # Check if stock is set to False
+            if db[stock] == False:
+              break
+            # If stock condition is True, carry out the task.
+            else:
+                # Get price value
+                price = float(prices[i])
+                print(f'\n{stock} = ${price}')
+                print(f'Average bought price: ${round(bought_price[stock], 4)}')
 
-                print(f"Allowable Holdings: {allowable_holdings}") 
-                if allowable_holdings >= 1:
-                    if holdings[stock] < allowable_holdings:
-                        modified_holdings = allowable_holdings - holdings[stock]
-                        buy(stock, modified_holdings, p_sma)
-                        print(modified_holdings)
-                        #print('### Buy Intention to bring us up to the allowable holdings.') # Dummy placeholder
-                    elif holdings[stock] == 0:
-                        buy(stock, allowable_holdings, p_sma)
-                        #print('### Buy Intention') # Dummy placeholder
-                    else:
-                      print('### Good to buy, but we have our maximum allowed stock.')  
-                                          
+                # Sell_Threshold should be set to 8 percent above the bought price
+                sell_threshold = round(bought_price[stock] * 1.08, 2)
+                # Defense sale price to mitigate losses in an event
+                defense_threshold = round(bought_price[stock] * 0.92, 2)
+                # Historical prices
+                df_prices = ts.get_historical_prices(stock, span='month')
+                # Simple Moving Average calculation
+                sma = ts.get_sma(stock, df_prices, window=12)
+                # Price over SMA calculation
+                p_sma = ts.get_price_sma(price, sma)
+                print('p_sma:', p_sma)
+                trade = ts.trade_option(stock, price)
+                print('trade: ', trade)
+
+                # Check against the defensive threshold, sell the stock if the condition is met and set DB to False.
+                if price < defense_threshold:
+                  print(f"{stock} has gone below {defense_threshold}. Freezing stock.")
+                  sell(stock, holdings[stock], price, p_sma)
+                  db[stock] = False
+                  break
+                
                 else:
-                    print('### Good to buy, no allowable holdings available.')
-            
-            elif trade == "SELL":
-                if holdings[stock] > 0:
-                    # Check to see if selling now will give a profit. If not, do not sell
-                    if price < sell_threshold:
-                        print(f"Refusing to sell. Current price ${price} is lower than original average purchase price of ${sell_threshold}")
-                    else:
-                        sell(stock, holdings[stock], price, p_sma)
-                        #print('### Sell Intention') # Dummy placeholder
-                else:
-                      print('### Good to sell, but we have no stock currently.')
+
+                    if trade == "BUY":
+                        # Variable to keep us from spending all of our money on a single stock.
+                        allowable_holdings = int((cash/10)/price)
+                        # Small check to make sure our values don't trigger false positives
+                        if allowable_holdings < 0:
+                            allowable_holdings = allowable_holdings * -1
+
+                        print(f"Allowable Holdings: {allowable_holdings}") 
+                        if allowable_holdings >= 1:
+                            if holdings[stock] < allowable_holdings:
+                                modified_holdings = allowable_holdings - holdings[stock]
+                                buy(stock, modified_holdings, p_sma)
+                                print(modified_holdings)
+                                #print('### Buy Intention to bring us up to the allowable holdings.') # Dummy placeholder
+                            elif holdings[stock] == 0:
+                                buy(stock, allowable_holdings, p_sma)
+                                #print('### Buy Intention') # Dummy placeholder
+                            else:
+                              print('### Good to buy, but we have our maximum allowed stock.')  
+                                                  
+                        else:
+                            print('### Good to buy, no allowable holdings available.')
+                    
+                    elif trade == "SELL":
+                        if holdings[stock] > 0:
+                            # Check to see if selling now will give a profit. If not, do not sell
+                            if price < sell_threshold:
+                                print(f"Refusing to sell. Current price: ${price} --- Average Purchase Price: ${bought_price[stock]} --- Defense Threshold: ${defense_threshold}.")
+                            else:
+                                sell(stock, holdings[stock], price, p_sma)
+                                #print('### Sell Intention') # Dummy placeholder
+                        else:
+                              print('### Good to sell, but we have no stock currently.')
         
         # 10 minute intervals
         time.sleep(600)
           
     logout()
+
+    
