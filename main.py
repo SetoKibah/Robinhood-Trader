@@ -13,10 +13,13 @@ from replit import db
 # CURRENT SETTING: SMA with month setting and with Daytrading allowable_holdings.
 
 # 01/11/2022: Defense Threshold of -8% has been set, as well as a profit sale of 8% for testing purposes. Will adjust and update. Returning bot to 24/7 runtime mode.
+
+# 01/18/2022: Sold Ethereum for a major loss, putting faith into the stock strategy. Reviewing on 01/21/2022
 ###############################################################
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
 print('Current OTP: ', totp)
+
 #time.sleep(180)
 
 # Login function
@@ -119,6 +122,8 @@ def get_stocks():
               'OXY',
               'EC']
     print(f"###{len(stocks)} STOCKS CURRENTLY MONITORED###")
+    for stock in stocks:
+        print(f"{stock}: {db[stock]}")
     random.shuffle(stocks)
     return(stocks)
 
@@ -258,7 +263,7 @@ if __name__ == "__main__":
 
             # Check if stock is set to False
             if db[stock] == False:
-              break
+              continue
             # If stock condition is True, carry out the task.
             else:
                 # Get price value
@@ -285,7 +290,7 @@ if __name__ == "__main__":
                   print(f"{stock} has gone below {defense_threshold}. Freezing stock.")
                   sell(stock, holdings[stock], price, p_sma)
                   db[stock] = False
-                  break
+                  continue
                 
                 else:
 
