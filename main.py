@@ -12,7 +12,7 @@ from replit import db
 ################################################################
 # CURRENT SETTING: SMA with month setting and with Daytrading allowable_holdings.
 
-# 01/11/2022: Defense Threshold of -8% has been set, as well as a profit sale of 8% for testing purposes. Will adjust and update. Returning bot to 24/7 runtime mode.
+# 01/11/2022: Defense Threshold of -8% has been set, as well as a profit sale of 12% for testing purposes. Will adjust and update. Returning bot to 24/7 runtime mode.
 
 # 01/18/2022: Sold Ethereum for a major loss, putting faith into the stock strategy. Reviewing on 01/21/2022
 ###############################################################
@@ -121,9 +121,9 @@ def get_stocks():
               'NIO',
               'OXY',
               'EC']
-    print(f"###{len(stocks)} STOCKS CURRENTLY MONITORED###")
-    for stock in stocks:
-        print(f"{stock}: {db[stock]}")
+    #print(f"###{len(stocks)} STOCKS CURRENTLY MONITORED###")
+    #for stock in stocks:
+     #   print(f"{stock}: {db[stock]}")
     random.shuffle(stocks)
     return(stocks)
 
@@ -131,7 +131,16 @@ def set_ticker_conditions():
     tickers = get_stocks()
     for stock in stocks:
       db[stock] = True
-      
+
+# Fuction to give us a brief look at frozen stocks and compare to total stocks in the registry.
+def show_frozen_stocks():
+    stock_count = 0
+    stocks = get_stocks()
+    for stock in stocks:
+        if db[stock] == False:
+          print(f"{stock}: {db[stock]}")
+    print(f"Frozen Stocks: {stock_count}\nActive Stocks: {len(stocks) - stock_count}")
+    
 
 
 # Market hours function
@@ -272,7 +281,7 @@ if __name__ == "__main__":
                 print(f'Average bought price: ${round(bought_price[stock], 4)}')
 
                 # Sell_Threshold should be set to 8 percent above the bought price
-                sell_threshold = round(bought_price[stock] * 1.08, 2)
+                sell_threshold = round(bought_price[stock] * 1.12, 2)
                 # Defense sale price to mitigate losses in an event
                 defense_threshold = round(bought_price[stock] * 0.92, 2)
                 # Historical prices
