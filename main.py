@@ -15,6 +15,8 @@ from replit import db
 # 01/11/2022: Defense Threshold of -8% has been set, as well as a profit sale of 12% for testing purposes. Will adjust and update. Returning bot to 24/7 runtime mode.
 
 # 01/18/2022: Sold Ethereum for a major loss, putting faith into the stock strategy. Reviewing on 01/21/2022
+
+# 02/01/2022: Reset all tickers to True, and added additional stocks to monitor in a few sectors.
 ###############################################################
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
@@ -104,7 +106,6 @@ def get_stocks():
               'WFC',
               'TFC',
               'UBS',
-              'VEOEY',
               'ROL',
               'XOM',
               'EQNR',
@@ -120,13 +121,34 @@ def get_stocks():
               'SNDL',
               'NIO',
               'OXY',
-              'EC']
+              'EC',
+              'AMD',
+              'BRQS',
+              'FORD',
+              'ZOM',
+              'NKLA',
+              'CPRX',
+              'JBLU',
+              'AMC',
+              'CCL',
+              'LUV',
+              'PENN',
+              'GME',
+              'NVDA',
+              'BA',
+              'COIN',
+              'MRNA',
+              'JNJ',
+              'ZM',
+              'WKHS',
+              'TLRY']
     #print(f"###{len(stocks)} STOCKS CURRENTLY MONITORED###")
     #for stock in stocks:
      #   print(f"{stock}: {db[stock]}")
     random.shuffle(stocks)
     return(stocks)
 
+# Function sets all of the stocks in our list to True, use when stocks are ready to be unfrozen.
 def set_ticker_conditions():
     tickers = get_stocks()
     for stock in stocks:
@@ -134,12 +156,16 @@ def set_ticker_conditions():
 
 # Fuction to give us a brief look at frozen stocks and compare to total stocks in the registry.
 def show_frozen_stocks():
-    stock_count = 0
+    frozen_stock_count = 0
     stocks = get_stocks()
+    max_stocks = len(stocks)
     for stock in stocks:
         if db[stock] == False:
           print(f"{stock}: {db[stock]}")
-    print(f"Frozen Stocks: {stock_count}\nActive Stocks: {len(stocks) - stock_count}")
+          frozen_stock_count += 1
+    active_stocks = max_stocks - frozen_stock_count
+    print(f"Frozen Stocks: {frozen_stock_count}\nActive Stocks: {active_stocks}\nTotal Stocks: {len(stocks)}")
+    print(f"Frozen stocks account for {round(frozen_stock_count / len(stocks) * 100, 2)}% of all listed stocks.")
     
 
 
@@ -236,6 +262,7 @@ if __name__ == "__main__":
     
     # Logging section
     current_timezone = pytz.timezone("US/Mountain")
+
     #f = open("log.txt", "a")
     #f.write(f"Program started: {dt.datetime.now(current_timezone)}\n")
     #f.close()
@@ -280,7 +307,7 @@ if __name__ == "__main__":
                 print(f'\n{stock} = ${price}')
                 print(f'Average bought price: ${round(bought_price[stock], 4)}')
 
-                # Sell_Threshold should be set to 8 percent above the bought price
+                # Sell_Threshold should be set to 12 percent above the bought price
                 sell_threshold = round(bought_price[stock] * 1.12, 2)
                 # Defense sale price to mitigate losses in an event
                 defense_threshold = round(bought_price[stock] * 0.92, 2)
@@ -305,7 +332,7 @@ if __name__ == "__main__":
 
                     if trade == "BUY":
                         # Variable to keep us from spending all of our money on a single stock.
-                        allowable_holdings = int((cash/10)/price)
+                        allowable_holdings = int((cash/5)/price)
                         # Small check to make sure our values don't trigger false positives
                         if allowable_holdings < 0:
                             allowable_holdings = allowable_holdings * -1
@@ -328,17 +355,17 @@ if __name__ == "__main__":
                     
                     elif trade == "SELL":
                         if holdings[stock] > 0:
-                            # Check to see if selling now will give a profit. If not, do not sell
+                            # Check to see if selling now meets the 12% criteria, otherwise we hold.
                             if price < sell_threshold:
-                                print(f"Refusing to sell. Current price: ${price} --- Average Purchase Price: ${bought_price[stock]} --- Defense Threshold: ${defense_threshold}.")
+                                print(f"Refusing to sell. Current price: ${price} --- Average Purchase Price: ${bought_price[stock]} --- Defense Threshold: ${defense_threshold} --- Target Sell {bought_price[stock] * 1.12}.")
                             else:
                                 sell(stock, holdings[stock], price, p_sma)
                                 #print('### Sell Intention') # Dummy placeholder
                         else:
                               print('### Good to sell, but we have no stock currently.')
         
-        # 10 minute intervals
-        time.sleep(600)
+        # 5 minute intervals
+        time.sleep(300)
           
     logout()
 
