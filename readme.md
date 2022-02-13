@@ -13,3 +13,4 @@ Packages used:
 - pyotp
 - replit db
 
+Using the above packages, we keep a database of current Stock Tickers (hardcoded in) with a binary value of True/False. True means a stock is monitored and traded freely. False means a stock is considered "frozen", has been sold, and will not be traded until it has stabilized. 

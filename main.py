@@ -9,24 +9,8 @@ import pytz
 import pyotp
 from replit import db
 
-################################################################
-# CURRENT SETTING: SMA with month setting and with Daytrading allowable_holdings.
-
-# 01/11/2022: Defense Threshold of -8% has been set, as well as a profit sale of 12% for testing purposes. Will adjust and update. Returning bot to 24/7 runtime mode.
-
-# 01/18/2022: Sold Ethereum for a major loss, putting faith into the stock strategy. Reviewing on 01/21/2022
-
-# 02/01/2022: Reset all tickers to True, and added additional stocks to monitor in a few sectors.
-
-# 02/07/2022: First sale made at a profit. RIOT bought 1 share at $15.40 on 02/02, sold today at $18.32. Promising result, but need to see if the stock will be rebought.
-
-# 02/10/2022: Program identified a dipping market, and executed reasonable purchases. A small dip in the portfolio, but the overall performance reamins high. 
-###############################################################
-
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
 print('Current OTP: ', totp)
-
-#time.sleep(180)
 
 # Login function
 def login(days):
@@ -42,11 +26,6 @@ def login(days):
 # Logout function
 def logout():
     rh.logout()
-
-    #current_timezone = pytz.timezone("US/Mountain")
-    #f = open("log.txt", "a")
-    #f.write(f"Logout: {dt.datetime.now(current_timezone)}\n")
-    #f.close()
 
 # Stocks acquisition function
 def get_stocks():
@@ -288,20 +267,6 @@ if __name__ == "__main__":
     # Logging section
     current_timezone = pytz.timezone("US/Mountain")
 
-    #f = open("log.txt", "a")
-    #f.write(f"Program started: {dt.datetime.now(current_timezone)}\n")
-    #f.close()
-    #####################################################
-    #rh_cash_test = rh.account.build_user_profile()
-    #print(rh_cash_test)
-
-    #rh_cash_test = rh.account.load_account_profile()
-    #print(rh_cash_test.keys())
-    #####################################################
-    #print('Test End...')
-    #time.sleep(30)
-    
-    
     stocks = get_stocks()
     #print('Stocks: ', stocks)
     cash, equity = get_cash()
