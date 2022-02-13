@@ -17,6 +17,10 @@ from replit import db
 # 01/18/2022: Sold Ethereum for a major loss, putting faith into the stock strategy. Reviewing on 01/21/2022
 
 # 02/01/2022: Reset all tickers to True, and added additional stocks to monitor in a few sectors.
+
+# 02/07/2022: First sale made at a profit. RIOT bought 1 share at $15.40 on 02/02, sold today at $18.32. Promising result, but need to see if the stock will be rebought.
+
+# 02/10/2022: Program identified a dipping market, and executed reasonable purchases. A small dip in the portfolio, but the overall performance reamins high. 
 ###############################################################
 
 totp = pyotp.TOTP(os.environ["AUTH_APP"]).now()
@@ -141,10 +145,22 @@ def get_stocks():
               'JNJ',
               'ZM',
               'WKHS',
-              'TLRY']
-    #print(f"###{len(stocks)} STOCKS CURRENTLY MONITORED###")
-    #for stock in stocks:
-     #   print(f"{stock}: {db[stock]}")
+              'TLRY',
+              'CNQ',
+              'CNX',
+              'NSANY',
+              'HOG',
+              'UTMD',
+              'ZION',
+              'INST',
+              'SPWH',
+              'VVNT',
+              'CRCT',
+              'SERA',
+              'RCRUY',
+              'IFNNY',
+              'MRAAY',
+              'MCHP']
     random.shuffle(stocks)
     return(stocks)
 
@@ -153,6 +169,15 @@ def set_ticker_conditions():
     tickers = get_stocks()
     for stock in stocks:
       db[stock] = True
+
+# Add a ticker to the database without resetting everything.
+# Can also be used to reset an existing ticker.
+def set_single_ticker_condition(ticker):
+    db[ticker] = True
+
+# Check value of single ticker, more for troubleshooting.
+def show_value(ticker):
+    print(f"{ticker}: {db[ticker]}")
 
 # Fuction to give us a brief look at frozen stocks and compare to total stocks in the registry.
 def show_frozen_stocks():
@@ -357,7 +382,7 @@ if __name__ == "__main__":
                         if holdings[stock] > 0:
                             # Check to see if selling now meets the 12% criteria, otherwise we hold.
                             if price < sell_threshold:
-                                print(f"Refusing to sell. Current price: ${price} --- Average Purchase Price: ${bought_price[stock]} --- Defense Threshold: ${defense_threshold} --- Target Sell {bought_price[stock] * 1.12}.")
+                                print(f"Refusing to sell. Current price: ${price} --- Average Purchase Price: ${bought_price[stock]} --- Defense Threshold: ${defense_threshold} --- Target Sell: ${round(bought_price[stock] * 1.12, 2)}.")
                             else:
                                 sell(stock, holdings[stock], price, p_sma)
                                 #print('### Sell Intention') # Dummy placeholder

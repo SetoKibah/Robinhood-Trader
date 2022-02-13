@@ -50,7 +50,7 @@ class Trader():
         self.price_sma_hour[stock] = self.get_price_sma(price, self.sma_hour[stock])
         p_sma = self.price_sma_hour[stock]
 
-        i1 = "BUY" if self.price_sma_hour[stock]<(1.0 - self.buffer) else "SELL" if self.price_sma_hour[stock]>(1.0 + self.buffer + .005) else "NONE"
+        i1 = "BUY" if self.price_sma_hour[stock]<(1.0 - self.buffer) else "SELL" if self.price_sma_hour[stock]>(1.0 + self.buffer) else "NONE"
         if i1 == "BUY":
             trade = "BUY"
         elif i1 == "SELL":

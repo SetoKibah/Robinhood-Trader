@@ -16,3 +16,15 @@ Buy action: 4 ZOM at $0.30 per stock. SMA at time: 0.9597 ---02-03-2022, 09:42:4
 Sell action: 1 AMC at $14.63 per stock. SMA at time: 0.9201 ---02-03-2022, 11:12:20---
 Buy action: 1 ZOM at $0.29 per stock. SMA at time: 0.9399 ---02-03-2022, 12:15:33---
 Sell action: 7 BTCM at $2.66 per stock. SMA at time: 0.9581 ---02-03-2022, 13:40:13---
+Sell action: 1 RIOT at $18.25 per stock. SMA at time: 1.1638 ---02-07-2022, 07:46:12---
+Sell action: 2 BB at $7.10 per stock. SMA at time: 0.9804 ---02-08-2022, 07:56:01---
+Buy action: 34 SNDL at $0.49 per stock. SMA at time: 0.9528 ---02-08-2022, 08:01:18---
+Sell action: 1 UAL at $45.32 per stock. SMA at time: 1.0456 ---02-08-2022, 08:11:43---
+Buy action: 18 SNDL at $0.49 per stock. SMA at time: 0.9523 ---02-08-2022, 09:57:18---
+Sell action: 1 DAL at $42.24 per stock. SMA at time: 1.0402 ---02-08-2022, 10:42:13---
+Sell action: 52 SNDL at $0.45 per stock. SMA at time: 1.101 ---02-09-2022, 07:55:48---
+Sell action: 5 IMCC at $2.07 per stock. SMA at time: 1.0982 ---02-09-2022, 08:06:21---
+Buy action: 3 SIRI at $6.53 per stock. SMA at time: 0.9547 ---02-10-2022, 08:11:45---
+Buy action: 6 SIRI at $6.50 per stock. SMA at time: 0.9503 ---02-10-2022, 08:43:50---
+Buy action: 6 INCR at $6.66 per stock. SMA at time: 0.9595 ---02-10-2022, 13:19:22---
+Buy action: 1 UBER at $37.92 per stock. SMA at time: 0.9566 ---02-10-2022, 13:24:39---
