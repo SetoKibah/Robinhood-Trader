@@ -1,7 +1,5 @@
 import pandas as pd
 import robin_stocks.robinhood as rh
-import robin_stocks.helper as helper
-from replit import db
 
 class Trader():
     def __init__(self, stocks):
@@ -50,7 +48,7 @@ class Trader():
         self.price_sma_hour[stock] = self.get_price_sma(price, self.sma_hour[stock])
         p_sma = self.price_sma_hour[stock]
 
-        i1 = "BUY" if self.price_sma_hour[stock]<(1.0 - self.buffer) else "SELL" if self.price_sma_hour[stock]>(1.0 + self.buffer) else "NONE"
+        i1 = "BUY" if p_sma<(1.0 - self.buffer) else "SELL" if p_sma>(1.0 + self.buffer) else "NONE"
         if i1 == "BUY":
             trade = "BUY"
         elif i1 == "SELL":
